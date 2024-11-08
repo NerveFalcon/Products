@@ -25,6 +25,7 @@ namespace Products.UI
 		public NetService()
 		{
 			Client = new TcpSharpSocketClient("localhost", INetServer.Port);
+			Client.Connect();
 			Client.OnDataReceived += OnDataReceived;
 		}
 
@@ -65,7 +66,8 @@ namespace Products.UI
 			inGetProgress = true;
 
 			Client.SendString(Commands.GetProducts);
-			WaitGetResult().Wait();
+			Task.Run(WaitGetResult).Wait();
+
 
 			return Products;
 		}
@@ -76,7 +78,7 @@ namespace Products.UI
 			inAddProgress = true;
 			
 			Client.SendString(isGood ? Commands.AddProductGood : Commands.AddProductBad);
-			WaitAddedResult().Wait();
+			Task.Run(WaitAddedResult).Wait(); 
 			
 			return addedResult is Results.AddedBad or Results.AddedGood;
 		}
@@ -87,7 +89,7 @@ namespace Products.UI
 			inRemoveProgress = true;
 
 			Client.SendString(Commands.RemoveProduct);
-			WaitRemoveResult().Wait();
+			Task.Run(WaitRemoveResult).Wait();
 			
 			return removeResult is Results.Removed;
 		}

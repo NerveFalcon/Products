@@ -46,5 +46,5 @@ public class ProductService : IProductService
 		return true;
 	}
 
-	public Product[] GetSnapshot() => Conveyor.ToArray();
+	public Product[] GetSnapshot() => Conveyor.Reverse().ToArray();
 }
