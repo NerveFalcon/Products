@@ -20,19 +20,29 @@ public class ProductService : IProductService
 
 	public bool TryAdd(bool isGood)
 	{
-		if (Count == Capacity) return false;
-
-		Conveyor.Enqueue(new(isGood));
+		if (Count == Capacity)
+		{
+			Console.WriteLine($"Not added. Count: {Count}");
+			return false;
+		}
+		var prod = new Product(isGood);
+		Conveyor.Enqueue(prod);
 		Count++;
+		Console.WriteLine($"Add {prod.IsGood}. Count: {Count}");
 		return true;
 	}
 
 	public bool TryRemove()
 	{
-		if (Count == 0) return false;
+		if (Count == 0)
+		{
+			Console.WriteLine($"Not Remove. Count: {Count}");
+			return false;
+		}
 
-		_ = Conveyor.Peek();
+		var deleted = Conveyor.Dequeue();
 		Count--;
+		Console.WriteLine($"Remove {deleted.IsGood}. Count: {Count}");
 		return true;
 	}
 }

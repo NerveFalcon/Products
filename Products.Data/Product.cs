@@ -2,5 +2,5 @@
 
 public class Product(bool isGood)
 {
-	public bool IsGood { get; set; } = isGood;
+	public bool IsGood { get; } = isGood;
 }

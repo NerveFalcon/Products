@@ -37,14 +37,10 @@ Remove();
 
 void Add(bool isGood)
 {
-	if (prodService.TryAdd(isGood))
-		Console.WriteLine($"Add {isGood}. Count: {prodService.Count}");
-	else Console.WriteLine($"Not added. Count: {prodService.Count}");
+	prodService.TryAdd(isGood);
 }
 
 void Remove()
 {
-	if (prodService.TryRemove())
-		Console.WriteLine($"Remove one. Count: {prodService.Count}");
-	else Console.WriteLine($"Not Remove. Count: {prodService.Count}");
+	prodService.TryRemove();
 }
