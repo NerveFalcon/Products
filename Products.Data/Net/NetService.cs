@@ -18,11 +18,17 @@ public class NetService : INetServer, INetClient, IDisposable
 	public void AddHandler(string command, Func<byte[]> handler)
 		=> Handlers.Add(command, handler);
 
+	public void AddHandler(string command, Action handler)
+		=> AddHandler(command, () => { handler.Invoke(); return [0]; });
+
 	public void RemoveHandler(string command)
 		=> Handlers.Remove(command);
 
 	public Task SendAsync(byte[] message) 
 		=> TcpListener.SendAsync(message);
+
+	public Task SendAsync(string message)
+		=> TcpListener.SendAsync(Encoding.UTF8.GetBytes(message));
 
 	public async Task StartListenAsync()
 	{
@@ -51,9 +57,9 @@ public class NetService : INetServer, INetClient, IDisposable
 					}
 					var message = Encoding.UTF8.GetString(buffer.ToArray());
 
-					if (Handlers.TryGetValue(message, out var Handler))
+					if (Handlers.TryGetValue(message, out var handler))
 					{
-						var res = Handler.Invoke();
+						var res = handler.Invoke();
 						await tcpClient.SendAsync(res);
 					}
 				}

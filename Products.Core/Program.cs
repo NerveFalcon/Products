@@ -60,7 +60,9 @@ byte[] Add(bool isGood)
 {
 	var res = prodService.TryAdd(isGood);
 
-	return Encoding.UTF8.GetBytes(res ? Results.Added : Results.NotAdded);
+	return Encoding.UTF8.GetBytes(res ? isGood ? Results.AddedGood
+												: Results.AddedBad
+										: Results.NotAdded);
 }
 
 byte[] Remove()
