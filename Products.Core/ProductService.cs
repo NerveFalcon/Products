@@ -45,4 +45,6 @@ public class ProductService : IProductService
 		Console.WriteLine($"Remove {deleted.IsGood}. Count: {Count}");
 		return true;
 	}
+
+	public Product[] GetSnapshot() => Conveyor.ToArray();
 }
