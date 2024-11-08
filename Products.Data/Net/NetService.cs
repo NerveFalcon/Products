@@ -4,30 +4,37 @@ using System.Text;
 
 namespace Products.Data.Net;
 
-public class NetService : INetServer
+public class NetService : INetServer, INetClient, IDisposable
 {
 	const int Port = 32234;
 	Dictionary<string, Func<byte[]>> Handlers { get; set; } = [];
+	public Socket TcpListener { get; }
+
+	public NetService()
+    {
+		TcpListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+		TcpListener.Bind(new IPEndPoint(IPAddress.Loopback, Port));
+	}
 	public void AddHandler(string command, Func<byte[]> handler)
 		=> Handlers.Add(command, handler);
 
 	public void RemoveHandler(string command)
 		=> Handlers.Remove(command);
 
+	public Task SendAsync(byte[] message) 
+		=> TcpListener.SendAsync(message);
+
 	public async Task StartListenAsync()
 	{
-		using var tcpListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
 		try
 		{
-			tcpListener.Bind(new IPEndPoint(IPAddress.Any, Port));
-			tcpListener.Listen();
+			TcpListener.Listen();
 			Console.WriteLine();
 			Console.WriteLine("Сервер запущен");
 
 			while (true)
 			{
-				using var tcpClient = await tcpListener.AcceptAsync();
+				using var tcpClient = await TcpListener.AcceptAsync();
 
 				var buffer = new List<byte>();
 				var byteRead = new byte[1];
@@ -57,4 +64,6 @@ public class NetService : INetServer
 			Console.WriteLine(ex.Message);
 		}
 	}
+
+	public void Dispose() => TcpListener.Dispose();
 }

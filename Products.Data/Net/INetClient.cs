@@ -2,6 +2,5 @@
 
 public interface INetClient
 {
-    Task<byte[]> SendAsync(byte[] message);
-    Task SendVoidAsync(byte[] message);
+    Task SendAsync(byte[] message);
 }

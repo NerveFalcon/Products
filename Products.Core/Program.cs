@@ -1,12 +1,11 @@
-﻿// See https://aka.ms/new-console-template for more information
-using Products.Core;
+﻿using Products.Core;
 using Products.Data.Net;
 
 using System.Text;
 
 Console.WriteLine("Hello, World!");
 var prodService = new ProductService(5);
-var server = new NetService();
+using var server = new NetService();
 
 server.AddHandler(Commands.AddProductGood, AddGood);
 server.AddHandler(Commands.AddProductBad, AddBad);
@@ -44,7 +43,13 @@ Remove();
 Remove();
 #endregion
 
-var serverTask = server.StartListenAsync();
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+Console.WriteLine();
+
+await server.StartListenAsync();
 
 
 #region Funcs
